@@ -1,0 +1,78 @@
+#include <stdio.h>
+
+unsigned char encrypt(unsigned char block,
+                      unsigned short key)
+{
+    return block ^ (key & 0xFF);
+}
+
+unsigned char decrypt(unsigned char block,
+                      unsigned short key)
+{
+    return encrypt(block, key);
+}
+
+int main()
+{
+    unsigned short key;
+
+    unsigned char plaintext[3];
+    unsigned char ciphertext[3];
+    unsigned char decrypted[3];
+
+    unsigned char counter = 0;
+
+    int i;
+
+    printf("Enter key (decimal): ");
+    scanf("%hu", &key);
+
+    printf("Enter 3 plaintext bytes:\n");
+
+    for (i = 0; i < 3; i++)
+        scanf("%hhu", &plaintext[i]);
+
+    /* Encryption */
+
+    for (i = 0; i < 3; i++)
+    {
+        unsigned char stream;
+
+        stream = encrypt(counter, key);
+
+        ciphertext[i] =
+            plaintext[i] ^ stream;
+
+        counter++;
+    }
+
+    printf("\nCiphertext:\n");
+
+    for (i = 0; i < 3; i++)
+        printf("%u ", ciphertext[i]);
+
+    /* Decryption */
+
+    counter = 0;
+
+    for (i = 0; i < 3; i++)
+    {
+        unsigned char stream;
+
+        stream = encrypt(counter, key);
+
+        decrypted[i] =
+            ciphertext[i] ^ stream;
+
+        counter++;
+    }
+
+    printf("\n\nDecrypted Plaintext:\n");
+
+    for (i = 0; i < 3; i++)
+        printf("%u ", decrypted[i]);
+
+    printf("\n");
+
+    return 0;
+}
